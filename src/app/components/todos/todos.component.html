@@ -9,7 +9,7 @@
     <input type="submit" value="submit" />
   </form>
   <div class="todo" *ngFor="let todo of todos; let i = index">
-    <div class="index">{{ i }}</div>
+    <div class="index">{{ i + 1 }}</div>
     <div
       class="content {{ todo.completed ? 'done' : '' }}"
       (click)="toggleDone(i)"
