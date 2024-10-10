@@ -12,10 +12,10 @@
     <div class="index">{{ i + 1 }}</div>
     <div
       class="content {{ todo.completed ? 'done' : '' }}"
-      (click)="toggleDone(i)"
+      (click)="toggleDone(todo.id, todo.completed)"
     >
       {{ todo.content }}
     </div>
-    <button (click)="removeTodo(i)">Remove</button>
+    <button (click)="removeTodo(todo.id)">Remove</button>
   </div>
 </div>

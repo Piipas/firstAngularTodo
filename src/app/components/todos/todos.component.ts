@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Todo } from '../../models/Todo';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TodosService } from '../../services/todos.service';
 
 @Component({
   selector: 'app-todos',
@@ -14,25 +15,40 @@ export class TodosComponent implements OnInit {
   todos: Todo[] = [];
   inputTodo: string = '';
 
-  constructor() {}
+  constructor(private todosService: TodosService) {}
 
   ngOnInit(): void {
-    this.todos = [
-      { content: 'First Todo Task', completed: false },
-      { content: 'Second Todo Task', completed: false },
-    ];
+    this.getTodos();
   }
 
-  toggleDone(index: number): void {
-    this.todos[index].completed = this.todos[index].completed ? false : true;
+  getTodos() {
+    this.todosService.getAllTodos().subscribe((todos) => (this.todos = todos));
   }
 
-  removeTodo(index: number): void {
-    this.todos.splice(index, 1);
+  toggleDone(id: string, completed: boolean): void {
+    this.todosService
+      .toggleDone(id, !completed)
+      .subscribe(
+        (todo) =>
+          (this.todos = this.todos.map((task) =>
+            task.id === todo.id ? todo : task
+          ))
+      );
+  }
+
+  removeTodo(id: string): void {
+    this.todosService
+      .removeTodo(id)
+      .subscribe(
+        (todo) =>
+          (this.todos = this.todos.filter((task) => task.id !== todo.id))
+      );
   }
 
   addTodo(): void {
-    this.todos.push({ completed: false, content: this.inputTodo });
+    this.todosService
+      .addTodo(this.inputTodo)
+      .subscribe((todo) => this.todos.push(todo));
     this.inputTodo = '';
   }
 }
